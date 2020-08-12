@@ -9,7 +9,6 @@ matrix:
   include:
 
     
-    #TESTED OK
     - name: "kong minikube wo snaps Python 3.7 on bionic amd64"
       dist: bionic
       arch: amd64
