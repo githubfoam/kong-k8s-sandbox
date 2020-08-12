@@ -10,25 +10,6 @@ set -o xtrace
 # https://github.com/Kong/kubernetes-ingress-controller/blob/main/docs/deployment/k4k8s.md
 echo "=============================deploy kong============================================================="
 
-# kubectl apply -f https://raw.githubusercontent.com/Kong/kong-dist-kubernetes/master/minikube/postgres.yaml
-# kubectl apply -f https://raw.githubusercontent.com/Kong/kong-dist-kubernetes/master/minikube/kong_migration_postgres.yaml
-# kubectl apply -f https://raw.githubusercontent.com/Kong/kong-dist-kubernetes/master/minikube/kong_postgres.yam
-
-# kubectl get deployment kong-rc
-
-# # Run the two mock services
-# docker build --no-cache -t kong:mesh-config  . -f Dockerfile.kong-config
-
-# kubectl apply -f serviceb.yaml
-# kubectl apply -f servicea.yaml
-
-# # Service B logs
-# kubectl logs -l app=serviceb -c serviceb
-
-# # Kong mesh logs
-# kubectl logs -l app=servicea -c kong
-
-
 # https://github.com/Kong/kubernetes-ingress-controller/blob/main/docs/deployment/k4k8s.md
 
 # YAML manifests METHOD 1
