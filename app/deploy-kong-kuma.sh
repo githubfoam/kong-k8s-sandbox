@@ -48,7 +48,8 @@ cd kuma-*/bin && ls -lai  #Kuma 0.7.1 has been downloaded!
 
 # Using kumactl install install the control-plane onto the Kubernetes cluster
 # bash kumactl install control-plane | kubectl apply -f - #error: no objects passed to apply
-/bin/sh -c "kumactl install control-plane | kubectl apply -f -"
+# /bin/sh -c "kumactl install control-plane | kubectl apply -f -" #kumactl: not found
+./kumactl install control-plane | kubectl apply -f -
 
 # check the pods are up and running by getting all pods in the kuma-system namespace
 kubectl get pods -n kuma-system
