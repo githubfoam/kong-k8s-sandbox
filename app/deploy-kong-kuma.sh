@@ -21,6 +21,17 @@ kubectl apply -f https://bit.ly/demokuma
 # The fourth pod is the Redis service that stores reviews for each item
 kubectl get pods -n kuma-demo
 
+echo echo "Waiting for kuma-demo to be ready "
+for i in {1..60}; do # Timeout after 5 minutes, 60x5=300 secs
+      # if kubectl get pods --namespace=kubeflow -l openebs.io/component-name=centraldashboard | grep Running ; then
+      if kubectl get pods --namespace=kuma-demo  | grep ContainerCreating ; then
+        sleep 10
+      else
+        break
+      fi
+done
+kubectl get pods -n kuma-demo
+
 # port-forward the sample application to access the front-end UI
 kubectl port-forward ${KUMA_DEMO_APP_POD_NAME} -n kuma-demo 8080:80# kubectl port-forward ${KUMA_DEMO_APP_POD_NAME} -n kuma-demo 8080:80
 curl http://localhost:8080
