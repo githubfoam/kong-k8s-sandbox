@@ -69,7 +69,7 @@ kubectl get pods -n kuma-system
 # so the injector can do its job.
 kubectl delete pods --all -n kuma-demo
 
-kubectl get pods -n kuma-demo -w
+# kubectl get pods -n kuma-demo -w #hanging
 kubectl get pods -n kuma-demo
 echo echo "Waiting for kuma-demo to be ready "
 for i in {1..60}; do # Timeout after 5 minutes, 60x5=300 secs
