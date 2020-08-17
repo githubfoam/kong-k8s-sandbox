@@ -33,8 +33,34 @@ done
 kubectl get pods -n kuma-demo
 
 # port-forward the sample application to access the front-end UI
-kubectl port-forward ${KUMA_DEMO_APP_POD_NAME} -n kuma-demo 8080:80# kubectl port-forward ${KUMA_DEMO_APP_POD_NAME} -n kuma-demo 8080:80
+# kubectl port-forward ${KUMA_DEMO_APP_POD_NAME} -n kuma-demo 8080:80# kubectl port-forward ${KUMA_DEMO_APP_POD_NAME} -n kuma-demo 8080:80
+
+# access the front-end UI on http://localhost:8080, port-forward the frontend service 
+kubectl port-forward service/frontend -n kuma-demo 8080
 curl http://localhost:8080
+
+# Kuma is an open-source control plane for modern connectivity, delivering high performance and reliability with Envoy
+# download it first and then install it onto the Kubernetes cluster
+/bin/sh -c "curl -L https://kuma.io/installer.sh | sh -"
+# cd kuma-0.7.0/bin && ls
+cd kuma-*/bin && ls -lai 
+
+# Using kumactl install install the control-plane onto the Kubernetes cluster
+bash kumactl install control-plane | kubectl apply -f -
+
+# check the pods are up and running by getting all pods in the kuma-system namespace
+kubectl get pods -n kuma-system
+
+echo echo "Waiting for kuma-system to be ready "
+for i in {1..60}; do # Timeout after 5 minutes, 60x5=300 secs
+      # if kubectl get pods --namespace=kubeflow -l openebs.io/component-name=centraldashboard | grep Running ; then
+      if kubectl get pods --namespace=kuma-system  | grep ContainerCreating ; then
+        sleep 10
+      else
+        break
+      fi
+done
+kubectl get pods -n kuma-system
 
 # # Download Kuma
 # # https://kuma.io/docs/0.7.1/installation/ubuntu/
