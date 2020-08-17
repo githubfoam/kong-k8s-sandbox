@@ -36,7 +36,7 @@ kubectl get pods -n kuma-demo
 # kubectl port-forward ${KUMA_DEMO_APP_POD_NAME} -n kuma-demo 8080:80# kubectl port-forward ${KUMA_DEMO_APP_POD_NAME} -n kuma-demo 8080:80
 
 # access the front-end UI on http://localhost:8080, port-forward the frontend service 
-kubectl port-forward service/frontend -n kuma-demo 8080
+kubectl port-forward service/frontend -n kuma-demo 8080 & #background job
 curl http://localhost:8080
 
 # Kuma is an open-source control plane for modern connectivity, delivering high performance and reliability with Envoy
@@ -61,6 +61,34 @@ for i in {1..60}; do # Timeout after 5 minutes, 60x5=300 secs
       fi
 done
 kubectl get pods -n kuma-system
+
+# the control-plane in the cluster, delete the existing pods (or perform a rolling update) 
+# so the injector can do its job.
+kubectl delete pods --all -n kuma-demo
+
+kubectl get pods -n kuma-demo -w
+kubectl get pods -n kuma-demo
+echo echo "Waiting for kuma-demo to be ready "
+for i in {1..60}; do # Timeout after 5 minutes, 60x5=300 secs
+      # if kubectl get pods --namespace=kubeflow -l openebs.io/component-name=centraldashboard | grep Running ; then
+      if kubectl get pods --namespace=kuma-demo  | grep ContainerCreating ; then
+        sleep 10
+      else
+        break
+      fi
+done
+
+# looks near identical except each pod now has an additional container. 
+# The additional container is the Envoy sidecar proxy that the control-plane is automatically adding to each pod.
+kubectl get pods -n kuma-demo
+
+# access the front-end UI on http://localhost:8080, port-forward the frontend service 
+# The marketplace application is now running with Kuma, 
+# but will be identical to the version with Kuma
+# The underlying difference is that all the services are now sending traffic to the Envoy dataplane within the same pod, 
+# and the Envoy proxies will communicate to each other
+kubectl port-forward service/frontend -n kuma-demo 8080 #background job
+curl http://localhost:8080
 
 # # Download Kuma
 # # https://kuma.io/docs/0.7.1/installation/ubuntu/
