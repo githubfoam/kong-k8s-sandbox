@@ -37,7 +37,8 @@ kubectl get pods -n kuma-demo
 
 # access the front-end UI on http://localhost:8080, port-forward the frontend service 
 kubectl port-forward service/frontend -n kuma-demo 8080 & #background job
-curl http://localhost:8080
+# curl: (7) Failed to connect to localhost port 8080: Connection refused
+# curl http://localhost:8080
 
 # Kuma is an open-source control plane for modern connectivity, delivering high performance and reliability with Envoy
 # download it first and then install it onto the Kubernetes cluster
@@ -88,7 +89,8 @@ kubectl get pods -n kuma-demo
 # The underlying difference is that all the services are now sending traffic to the Envoy dataplane within the same pod, 
 # and the Envoy proxies will communicate to each other
 kubectl port-forward service/frontend -n kuma-demo 8080 #background job
-curl http://localhost:8080
+# curl: (7) Failed to connect to localhost port 8080: Connection refused
+# curl http://localhost:8080
 
 # # Download Kuma
 # # https://kuma.io/docs/0.7.1/installation/ubuntu/
