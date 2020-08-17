@@ -44,10 +44,11 @@ kubectl port-forward service/frontend -n kuma-demo 8080 & #background job
 # download it first and then install it onto the Kubernetes cluster
 /bin/sh -c "curl -L https://kuma.io/installer.sh | sh -"
 # cd kuma-0.7.0/bin && ls
-cd kuma-*/bin && ls -lai 
+cd kuma-*/bin && ls -lai  #Kuma 0.7.1 has been downloaded!
 
 # Using kumactl install install the control-plane onto the Kubernetes cluster
-bash kumactl install control-plane | kubectl apply -f -
+# bash kumactl install control-plane | kubectl apply -f - #error: no objects passed to apply
+/bin/sh -c "kumactl install control-plane | kubectl apply -f -"
 
 # check the pods are up and running by getting all pods in the kuma-system namespace
 kubectl get pods -n kuma-system
@@ -88,9 +89,24 @@ kubectl get pods -n kuma-demo
 # but will be identical to the version with Kuma
 # The underlying difference is that all the services are now sending traffic to the Envoy dataplane within the same pod, 
 # and the Envoy proxies will communicate to each other
-kubectl port-forward service/frontend -n kuma-demo 8080 #background job
+kubectl port-forward service/frontend -n kuma-demo 8080 & #background job
+
 # curl: (7) Failed to connect to localhost port 8080: Connection refused
 # curl http://localhost:8080
+
+# Tools kumactl Setup
+# configure kumactl to point to any remote Kuma control-plane instance
+# Before configuring  local kumactl to point to control-plane running in the 
+# kuma-system namespace, port-forward the pod.
+
+# port-forward the kuma-control-plane service in the kuma-system namespace
+# 5681: the HTTP API server that is being used by kumactl to retrieve the state of your configuration and policies on every environment
+kubectl port-forward service/kuma-control-plane -n kuma-system 5681 & #background job
+
+# configure kumactl to point to the address where the HTTP API server runs
+# ./kumactl config control-planes add --name=minikube --address=http://localhost:5681
+bash kumactl config control-planes add --name=minikube --address=http://localhost:5681
+
 
 # # Download Kuma
 # # https://kuma.io/docs/0.7.1/installation/ubuntu/
