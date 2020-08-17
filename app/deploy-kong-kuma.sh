@@ -105,8 +105,8 @@ kubectl port-forward service/frontend -n kuma-demo 8080 & #background job
 kubectl port-forward service/kuma-control-plane -n kuma-system 5681 & #background job
 
 # configure kumactl to point to the address where the HTTP API server runs
-# ./kumactl config control-planes add --name=minikube --address=http://localhost:5681
-bash kumactl config control-planes add --name=minikube --address=http://localhost:5681
+./kumactl config control-planes add --name=minikube --address=http://localhost:5681
+# bash kumactl config control-planes add --name=minikube --address=http://localhost:5681 #kumactl: kumactl: cannot execute binary file
 
 
 # # Download Kuma
