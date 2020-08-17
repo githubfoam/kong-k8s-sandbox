@@ -6,11 +6,14 @@ set -o xtrace
 # set -eox pipefail #safety for script
 
 # https://konghq.com/blog/canary-deployment-5-minutes-service-mesh/
+# https://kuma.io/docs/0.7.1/installation/ubuntu/
+# https://github.com/kumahq/kuma-demo/tree/master/kubernetes
 echo "=============================securing your application with mTLS using Kuma============================================================="
 
 # Kuma will store all of its state and configuration on the underlying Kubernetes API server, and therefore requiring no dependency to store the data. 
 # Deploy the marketplace application
-kubectl apply -f http://bit.ly/kuma101
+# kubectl apply -f https://raw.githubusercontent.com/Kong/kuma-demo/master/kubernetes/kuma-demo-aio.yaml
+kubectl apply -f https://bit.ly/demokuma
 
 # The first pod is an Elasticsearch service that stores all the items in our marketplace
 # The second pod is the Vue front-end application that will give us a visual page to interact with
@@ -22,9 +25,23 @@ kubectl get pods -n kuma-demo
 kubectl port-forward ${KUMA_DEMO_APP_POD_NAME} -n kuma-demo 8080:80# kubectl port-forward ${KUMA_DEMO_APP_POD_NAME} -n kuma-demo 8080:80
 curl http://localhost:8080
 
-# Download Kuma
+# # Download Kuma
+# # https://kuma.io/docs/0.7.1/installation/ubuntu/
+
+# # Run the following script to automatically detect the operating system and download Kuma
+# # curl -L https://kuma.io/installer.sh | sh -
+# /bin/sh -c "curl -L https://kuma.io/installer.sh | sh -"
+
+# export KUMAVERSION="0.7.1"
+# # https://kong.bintray.com/kuma/kuma-0.7.1-ubuntu-amd64.tar.gz
+# # tar xvzf kuma-0.7.1*.tar.gz
+
+https://kong.bintray.com/kuma/kuma-$KUMAVERSION-ubuntu-amd64.tar.gz
+tar xvzf kuma-$KUMAVERSION*.tar.gz
+
 wget https://kong.bintray.com/kuma/kuma-0.3.0-darwin-amd64.tar.gz
 tar xvzf kuma-0.3.0-darwin-amd64.tar.gz
+
 cd bin && ls -lai
 
 # Install Kuma
